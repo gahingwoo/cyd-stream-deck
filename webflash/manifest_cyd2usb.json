@@ -1,0 +1,31 @@
+{
+    "name": "CYD2USB StreamDeck",
+    "version": "1.0.0",
+    "builds": [
+        {
+            "chipFamily": "ESP32",
+            "parts": [
+                {
+                    "path": "firmware/cyd2usb/firmware.bin",
+                    "offset": 65536
+                },
+                {
+                    "path": "firmware/cyd2usb/bootloader.bin",
+                    "offset": 4096
+                },
+                {
+                    "path": "firmware/cyd2usb/partitions.bin",
+                    "offset": 32768
+                }
+            ],
+            "flash_settings": {
+                "flash_mode": "qio",
+                "flash_size": "4MB",
+                "flash_freq": "80m",
+                "baud_rate": 921600,
+                "verify": true,
+                "compress": true
+            }
+        }
+    ]
+} 

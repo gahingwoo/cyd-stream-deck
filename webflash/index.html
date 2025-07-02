@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CYD StreamDeck WebFlash</title>
+    <script type="module" src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .description {
+            margin-bottom: 30px;
+            color: #666;
+            line-height: 1.6;
+        }
+        .model-select {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f8f9fa;
+        }
+        .model-select select {
+            padding: 8px;
+            margin: 0 10px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        .model-info {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+            background-color: #e9ecef;
+            display: none;
+        }
+        .model-info.active {
+            display: block;
+        }
+        .language-select {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+        esp-web-install-button {
+            --esp-tools-button-color: #4CAF50;
+            --esp-tools-button-text-color: white;
+            --esp-tools-button-border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="language-select">
+        <select id="language" onchange="changeLanguage(this.value)">
+            <option value="en">English</option>
+            <option value="cn">简体中文</option>
+            <option value="tc">繁體中文</option>
+            <option value="canton">粵語</option>
+            <option value="ms">Bahasa Melayu</option>
+        </select>
+    </div>
+
+    <div class="container">
+        <h1 data-i18n="title">CYD StreamDeck WebFlash</h1>
+        
+        <div class="model-select">
+            <label for="model" data-i18n="selectModel">Select Model:</label>
+            <select id="model" onchange="changeModel(this.value)">
+                <option value="cyd">CYD (Single USB)</option>
+                <option value="cyd2usb">CYD2USB (Dual USB)</option>
+            </select>
+        </div>
+
+        <div id="cyd-info" class="model-info">
+            <h3 data-i18n="cydTitle">CYD Model</h3>
+            <p data-i18n="cydDesc">Single USB port (microUSB) version with ILI9341 display.</p>
+        </div>
+
+        <div id="cyd2usb-info" class="model-info">
+            <h3 data-i18n="cyd2usbTitle">CYD2USB Model</h3>
+            <p data-i18n="cyd2usbDesc">Dual USB ports (USB-C and microUSB) version with ST7789 display.</p>
+        </div>
+
+        <div class="description">
+            <p data-i18n="description">Use this tool to easily update your CYD StreamDeck firmware.</p>
+            <p data-i18n="requirements">Requirements:</p>
+            <ul style="text-align: left; display: inline-block;">
+                <li data-i18n="req1">Device connected via USB</li>
+                <li data-i18n="req2">Chrome or Edge browser</li>
+                <li data-i18n="req3">HTTPS or localhost environment</li>
+            </ul>
+        </div>
+
+        <esp-web-install-button id="installButton" manifest="manifest.json">
+            <button slot="activate" data-i18n="startFlash">Start Flashing</button>
+            <span slot="unsupported" data-i18n="unsupported">Your browser doesn't support Web Serial. Please use Chrome or Edge.</span>
+            <span slot="not-allowed" data-i18n="notAllowed">Please run this page in HTTPS or localhost environment.</span>
+        </esp-web-install-button>
+    </div>
+
+    <script>
+        // Translations
+        const translations = {
+            'en': {
+                'title': 'CYD StreamDeck WebFlash',
+                'selectModel': 'Select Model:',
+                'cydTitle': 'CYD Model',
+                'cydDesc': 'Single USB port (microUSB) version with ILI9341 display.',
+                'cyd2usbTitle': 'CYD2USB Model',
+                'cyd2usbDesc': 'Dual USB ports (USB-C and microUSB) version with ST7789 display.',
+                'description': 'Use this tool to easily update your CYD StreamDeck firmware.',
+                'requirements': 'Requirements:',
+                'req1': 'Device connected via USB',
+                'req2': 'Chrome or Edge browser',
+                'req3': 'HTTPS environment',
+                'startFlash': 'Start Flashing',
+                'unsupported': 'Your browser doesn\'t support Web Serial. Please use Chrome or Edge.',
+                'notAllowed': 'Please run this page in HTTPS environment.'
+            },
+            'tc': {
+                'title': 'CYD StreamDeck 網頁刷機',
+                'selectModel': '選擇型號：',
+                'cydTitle': 'CYD 型號',
+                'cydDesc': '單 USB 接口（microUSB）版本，使用 ILI9341 顯示屏。',
+                'cyd2usbTitle': 'CYD2USB 型號',
+                'cyd2usbDesc': '雙 USB 接口（USB-C 和 microUSB）版本，使用 ST7789 顯示屏。',
+                'description': '使用此工具輕鬆更新您的 CYD StreamDeck 固件。',
+                'requirements': '要求：',
+                'req1': '装置已通過 USB 連接',
+                'req2': '使用 Chrome 或 Edge 瀏覽器',
+                'req3': '在 HTTPS 環境下運行',
+                'startFlash': '開始刷機',
+                'unsupported': '您的瀏覽器不支持 Web Serial。請使用 Chrome 或 Edge 瀏覽器。',
+                'notAllowed': '請在 HTTPS 環境下運行此頁面。'
+            },
+            'cn': {
+                'title': 'CYD StreamDeck 网页刷机',
+                'selectModel': '选择型号：',
+                'cydTitle': 'CYD 型号',
+                'cydDesc': '单 USB 接口（microUSB）版本，使用 ILI9341 显示屏。',
+                'cyd2usbTitle': 'CYD2USB 型号',
+                'cyd2usbDesc': '双 USB 接口（USB-C 和 microUSB）版本，使用 ST7789 显示屏。',
+                'description': '使用此工具轻松更新您的 CYD StreamDeck 固件。',
+                'requirements': '要求：',
+                'req1': '设备已通过 USB 连接',
+                'req2': '使用 Chrome 或 Edge 浏览器',
+                'req3': '在 HTTPS 环境下运行',
+                'startFlash': '开始刷机',
+                'unsupported': '您的浏览器不支持 Web Serial。请使用 Chrome 或 Edge 浏览器。',
+                'notAllowed': '请在 HTTPS 环境下运行此页面。'
+            },
+            'canton': {
+                'title': 'CYD StreamDeck 網頁刷機',
+                'selectModel': '選擇型號：',
+                'cydTitle': 'CYD 型號',
+                'cydDesc': '單 USB 接口（microUSB）版本，使用 ILI9341 顯示屏。',
+                'cyd2usbTitle': 'CYD2USB 型號',
+                'cyd2usbDesc': '雙 USB 接口（USB-C 和 microUSB）版本，使用 ST7789 顯示屏。',
+                'description': '使用哩個工具輕鬆在線更新您嘅 CYD StreamDeck 固件。',
+                'requirements': '要求：',
+                'req1': '部機已經通過 USB 連住',
+                'req2': '用緊 Chrome 或者 Edge 瀏覽器',
+                'req3': '喺 HTTPS 環境下運行',
+                'startFlash': '開始刷機',
+                'unsupported': '您嘅瀏覽器唔支援 Web Serial。請使用 Chrome 或 Edge 瀏覽器。',
+                'notAllowed': '請喺 HTTPS 環境下運行此頁面。'
+            },
+            'ms': {
+                'title': 'CYD StreamDeck WebFlash',
+                'selectModel': 'Pilih Model:',
+                'cydTitle': 'Model CYD',
+                'cydDesc': 'Versi port USB tunggal (microUSB) dengan paparan ILI9341.',
+                'cyd2usbTitle': 'Model CYD2USB',
+                'cyd2usbDesc': 'Versi port USB berganda (USB-C dan microUSB) dengan paparan ST7789.',
+                'description': 'Gunakan alat ini untuk mengemas kini firmware CYD StreamDeck anda dengan mudah.',
+                'requirements': 'Keperluan:',
+                'req1': 'Peranti disambungkan melalui USB',
+                'req2': 'Pelayar Chrome atau Edge',
+                'req3': 'Persekitaran HTTPS',
+                'startFlash': 'Mula Flash',
+                'unsupported': 'Pelayar anda tidak menyokong Web Serial. Sila gunakan Chrome atau Edge.',
+                'notAllowed': 'Sila jalankan halaman ini dalam persekitaran HTTPS.'
+            }
+        };
+
+        // Change language
+        function changeLanguage(lang) {
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (translations[lang] && translations[lang][key]) {
+                    element.textContent = translations[lang][key];
+                }
+            });
+        }
+
+        // Change model
+        function changeModel(model) {
+            document.querySelectorAll('.model-info').forEach(info => {
+                info.classList.remove('active');
+            });
+            document.getElementById(`${model}-info`).classList.add('active');
+            
+            // Update manifest path
+            const installButton = document.getElementById('installButton');
+            installButton.setAttribute('manifest', `manifest_${model}.json`);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set initial language based on browser
+            const browserLang = navigator.language.split('-')[0];
+            const supportedLangs = ['en', 'tc', 'cn', 'canton', 'ms'];
+            const initialLang = supportedLangs.includes(browserLang) ? browserLang : 'en';
+            document.getElementById('language').value = initialLang;
+            changeLanguage(initialLang);
+
+            // Show initial model info
+            changeModel('cyd');
+        });
+    </script>
+</body>
+</html> 
