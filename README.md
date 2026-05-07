@@ -4,7 +4,7 @@ A **StreamDeck controller** based on **ESP32-Cheap-Yellow-Display** that control
 
 ![CYD StreamDeck](picture.png)
 
-## 🌐 Language Options
+## Docs Language Options
 
 - [English](README.md)
 - [繁體中文](README_TC.md)
@@ -110,3 +110,4 @@ You can now flash your CYD StreamDeck directly from your web browser! Visit our 
 ### Requirements
 - Chrome or Edge browser
 - USB connection
+
